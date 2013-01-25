@@ -1,0 +1,49 @@
+Fonctions client
+
+	- connexion
+	- envoyer / recevoir messages
+	- activer / désactiver votes
+	- renvoyer un vote
+	- activer "starter"
+	- envoyer signal "prêt"
+	- quitter
+	- MAJ profil perso
+	- MAJ liste joueurs
+	- activer timer
+	- afficher message d'erreur
+
+Fonctions serveur
+
+(Thread principal)
+
+	- nouvelle connexion
+		- demander id
+		- checker SQL -> infos (dont le salon)
+		- créer et/ou rejoindre salon
+		- kicker intrus
+		- lancer check "prêt" si nb joueurs OK
+	
+	- créer salon
+		- check SQL
+		
+	- recevoir check "prêt"
+	- recevoir / envoyer message
+	- recevoir vote
+	
+(MDJ)
+
+	- répartir les rôles
+	- boucle de jeu
+		- activer / désactiver les votes
+		- consulter les résultats
+		...
+	- enregister les scores
+	
+	
+	
+------------------------------------------
+node.js
+web worker
+(équivalent mutex)
+partage de variables entre threads
+------------------------------------------
