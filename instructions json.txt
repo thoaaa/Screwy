@@ -1,4 +1,4 @@
-nb : le client envoie une seule instruction à la fois au serveur, tandis que le serveur envoie une liste (array) d'instructions au client.
+MAJ : le client et le serveur ne reçoivent qu'une seule instruction a la fois.
 
 Transmissions client -> serveur
 
@@ -37,10 +37,20 @@ Transmissions client -> serveur
 
 Transmissions serveur -> client
 
+---MAJ---
+- transmettre plusieurs instructions //permet de communiquer plusieurs instructions dans un seul push
+
+	var instructions = {
+		type = "instructionList",
+		instructions = [ xxx, xxx... ]
+	};
+
+-message
+
 	var msg = {
 		type: 'message'
 		sender: xxx,
-		date: xxx,
+		date: xxx, //objet de type Date ?
 		txt: xxx,
 		color: xxx,
 	};
