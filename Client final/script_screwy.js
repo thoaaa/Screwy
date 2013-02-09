@@ -219,8 +219,8 @@ function webSocket() {
 	function deconnect_player(e) {
 		var pseudo = e.pseudo;
 		var id = list_pseudos.indexOf(pseudo);
-		list_players.splice(id);
-		list_pseudos.splice(id);
+		list_players.splice(id,1);
+		list_pseudos.splice(id,1);
 		document.getElementById(pseudo).parentNode.removeChild(document.getElementById(pseudo));
 	}
 
