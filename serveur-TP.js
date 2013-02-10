@@ -7,18 +7,9 @@ var webSocketServer = require('websocket').server;
 var http = require('http');
 var Worker = require('webworker-threads').Worker;
 
-Worker.prototype.onmessage = function(event) {
-	var receivers = event.data.receivers;
-	var instruction = event.data.instruction;
-	if (receivers && instruction)
-		listeClients.sendInstruction(receveirs, instruction);
-	else
-		console.log("Objet non standard reçu d'un salon : "); 
-}
-
 //-------------------------------CLASSES ANNUAIRE---------------------------------
 
-function Client(pseudo, connexion) { 
+function Client(pseudo, connexion) {
 	this.pseudo = pseudo;
 	this.connexion = connexion;
 }
@@ -28,8 +19,8 @@ Client.prototype = {
 		return this.pseudo;
 	},
 	sendString: function(string) {
-		connexion.sendUTF(string);
-		console.log(this.pseudo + "->" + string);
+		this.connexion.sendUTF(string);
+		console.log(string + "--ENVOI-->" + this.pseudo);
 	}
 }
 
@@ -60,12 +51,21 @@ AnnuaireClients.prototype = {
 	},
 	sendInstruction: function(listePseudoClients, instruction) {
 		var json = JSON.stringify(instruction);
-		for (var i = 0; i < listePseudoClients.length; i++) {
-			var p = this.getPositionClient(listePseudoClients[i]);
-			if (p !== null)
-				this.listeClients[p].sendString(json);
-		}
-	
+		if (listePseudoClients.length <= 0) {
+			this.print();
+			for(var i = 0; i < this.listeClients.length; i++) {
+				this.listeClients[i].sendString(json);
+			}
+		} else {
+			for (var i = 0; i < listePseudoClients.length; i++) {
+				var p = this.getPositionClient(listePseudoClients[i]);
+				if (p != null) {
+					this.listeClients[p].sendString(json);
+				} else {
+					console.log("envoi à " + listePseudoClients[i] + "annulé (pseudo inconnu)");
+				}
+			}
+		}	
 	},
 	print: function(){
 		console.log( "-------------");
@@ -78,7 +78,23 @@ AnnuaireClients.prototype = {
 
 function Salon(id, roles) {
 	this.id = id;
-	this.ww = new Worker(scriptWW.js);
+	//Le code du webworker est ci-dessous
+	this.ww = new Worker(function() {
+		onmessage = function(event) {
+			//TODO mettre ici le vrai webworker salon (pour l'instant, il s'agit d'une fonction perroquet)
+			console.log("##" + JSON.stringify(event.data));
+			var ins = event.data;
+			
+			var r = [];
+			if (ins.sender)
+				r.push(ins.sender); 
+			var i = {
+				receivers : r,
+				instruction : ins
+			};
+			postMessage(i);
+		};
+	});
 	this.ww.listeClients = new AnnuaireClients();
 	this.sendInstruction({
 		type:"startInfos",
@@ -107,7 +123,8 @@ Salon.prototype = {
 		this.ww.listeClients.removeClient(pseudo);
 	},
 	sendInstruction: function(instruction) {
-		this.ww.postMessage(instruction);
+		var msg = instruction;
+		this.ww.postMessage(msg);
 	}
 }
 
@@ -117,8 +134,10 @@ function AnnuaireSalons() {
 
 AnnuaireSalons.prototype = {
 	createSalon: function(id) {
-		var s = new Salon(s);
+		var roles = ["innocent", "psychopathe", "wise"];
+		var s = new Salon(id, roles);
 		this.listeSalons.push(s);
+		return s;
 	},
 	removeSalon: function(pseudo) {
 		var p = this.getPositionSalon(id);
@@ -166,6 +185,20 @@ AnnuaireSalons.prototype = {
 }
 //-----------------------------FIN CLASSES ANNUAIRE-------------------------------
 
+//La fonction suivante est exécutée lors de la reception d'un message venant d'un WebWorker
+Worker.prototype.onmessage = function(event) {
+	console.log("objet reçu : " + JSON.stringify(event.data)); 
+	var i = event.data;
+	var receivers = i.receivers;
+	var instruction = i.instruction;
+	console.log("-- " + JSON.stringify(receivers) + " -> "  + JSON.stringify(instruction));
+	if (instruction != null) {
+		this.listeClients.sendInstruction(receivers, instruction);
+	} else {
+		console.log("Objet non standard reçu d'un salon : " + event.data); 
+	}
+}
+
 //init serveur http
 var server = http.createServer(function(request, response) {
 });
@@ -197,13 +230,13 @@ wsServer.on('request', function(request) {
 			return;
 		//on récupere l'instruction contenue dans le message
 		try {
-			var instruction = JSON.parse(message.data);
+			var instruction = JSON.parse(message.utf8Data);
 		} catch (e) {
-			console.log('Le message suivant n\'est pas au format JSON : ', message.data);
+			console.log('Le message suivant n\'est pas au format JSON : ', message.utf8Data);
 			return;
 		}
 		//on vérifie que le client est identifié
-		if (pseudo === false ) {
+		if (pseudo == false ) {
 			if (instruction.type != 'connexion') {
 				console.log("Un client non identifié tente d'exécuter des instructions.");
 				return;
@@ -212,56 +245,35 @@ wsServer.on('request', function(request) {
 				//TODO checker la connexion (travail Rocco)
 				salon = annuaireSalons.getSalonById(instruction.salon);
 				if (salon == null) {
+					console.log("Création du salon " + instruction.salon);
 					salon = annuaireSalons.createSalon(instruction.salon);
 					if (salon == null) {
 						//TODO informer user
 						//TODO kicker user
-						console.log("Creation du salon " + instruction.salon + "échouée");
+						console.log("Création du salon " + instruction.salon + " échouée");
 						return;
 					}
 				}
 				pseudo = instruction.pseudo;
-				salon.addPlayer(pseudo);	
+				console.log(pseudo + " entre dans le salon " + instruction.salon);
+				salon.addPlayer(pseudo, this);	
 			}
 		}
 		//on envoie l'instruction au salon
-		else
+		else {
+			console.log("transmission d'une instruction de " + pseudo + " au salon " + salon.getId());
 			instruction.sender = pseudo;
 			salon.sendInstruction(instruction);
+		}
 	});
 
 	// déconnexion
 	connection.on('close', function(connection) {
-		if (userName !== false) {
-			console.log((new Date()) + " Peer "
-				+ connection.remoteAddress + " disconnected.");
-			//Supprimer le client de la liste des clients connectés
-			clients.splice(index, 1);
-			//TODO informer WW salon
+		if (pseudo != false) {
+			console.log("Déconnexion de " + pseudo);
+			salon.removePlayer(pseudo);			
 		}
+		else
+			console.log("Déconnexion d'un user non identifié")
 	});
 });
-
-function executeSalonInstruction(salon, instruction) {
-
-}
-
-function checkUser(pseudo, key) {
-
-	return true;
-}
-
-function getSalonInfo(idSalon) {
-
-}
-
-
-/*
-// creer un WW
-var worker = new Worker(scriptWW.js);
-// recevoir data
-worker.onmessage = function(event) {
-  console.log("Worker said : " + event.data);
-};
-//envoyer data
-worker.postMessage('ali');*/
