@@ -8,9 +8,9 @@ var gameStarted = false;
 var actionHistory = [];
 
 var voteManagers = [];
-var voteManagers["normal"] = new VoteManager("normal");
-var voteManagers["psycho"] = new VoteManager("psycho");
-var voteManagers["special"] = new VoteManager("special");
+voteManagers["normal"] = new VoteManager("normal");
+voteManagers["psycho"] = new VoteManager("psycho");
+voteManagers["special"] = new VoteManager("special");
 
 function Vote(sender, target) {
 	this.sender = sender;
@@ -37,7 +37,7 @@ voteManager.prototype = {
 			receivers : this.allowedVoters,
 			instruction : {
 				type : "voteActivate",
-				typeVote : "psycho",
+				typeVote : this.type,
 				pseudoNominees : this.targets
 			}
 		};
@@ -99,7 +99,7 @@ voteManager.prototype = {
 			receivers : allowedVoters,
 			instruction : {
 				type : "voteDeactivate",
-				typeVote : "normal",
+				typeVote : this.type,
 			}
 		};
 		postMessage(closeVote);
@@ -234,7 +234,7 @@ function deliverMsg(msg) {
 		receivers : receivers,
 		instruction : msg
 	};
-	postMessage(newMessage);
+	//postMessage(newMessage);
 }
 
 function sendHistory(pseudo) {
@@ -245,7 +245,7 @@ function sendHistory(pseudo) {
 			instructions : actionHistory
 		}
 	};
-	postMessage(history);
+	//postMessage(history);
 }
 
 function activateStarter() {
