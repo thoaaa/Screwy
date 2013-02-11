@@ -40,12 +40,12 @@ function webSocket() {
 			reception_message(object);
 		} else if (object.type == "voteActivate") {
 			activate_vote(object);	
-		} else if (object.type == "voteDeactivate") {
-			deactivate_vote(object);
+		} else if (object.type == "votedesactivate") {
+			desactivate_vote(object);
 		} else if (object.type == "starterActivate") {
 			activate_starter();
-		} else if (object.type == "starterDeactivate") {
-			deactivate_starter();
+		} else if (object.type == "starterdesactivate") {
+			desactivate_starter();
 		} else if (object.type == "userInfo") {
 			maj_players(object);
 		} else if (object.type == "timerActivate") {
@@ -115,7 +115,7 @@ function webSocket() {
 	}
 	
 	//////////Désactiver les votes//////////
-	function deactivate_vote(e) {
+	function desactivate_vote(e) {
 		var typeVote = e.typeVote;
 		if (typeVote == "normal") {
 			document.getElementById("vote_normal").style.display = "none";
@@ -132,7 +132,7 @@ function webSocket() {
 	}
 	
 	//////////Désactivation du starter//////////
-	function deactivate_starter() {
+	function desactivate_starter() {
 		document.getElementById("pret").style.display = "none";
 	}
 	

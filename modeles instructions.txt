@@ -76,8 +76,8 @@ Transmissions serveur -> client
 		type = 'starterActivate'
 	};
 
-	var starterDeactivate = {
-		type = 'starterDeactivate'
+	var starterdesactivate = {
+		type = 'starterdesactivate'
 	};
 
 
@@ -195,8 +195,8 @@ TRANSMISSIONS WEBWORKER > THREAD PRINCIPAL
 		type = 'starterActivate'
 	};
 
-	var starterDeactivate = {
-		type = 'starterDeactivate'
+	var starterdesactivate = {
+		type = 'starterdesactivate'
 	};
 
 
@@ -289,8 +289,8 @@ TRANSMISSION SERVEUR > CLIENT
 		type = 'starterActivate'
 	};
 
-	var starterDeactivate = {
-		type = 'starterDeactivate'
+	var starterdesactivate = {
+		type = 'starterdesactivate'
 	};
 
 
