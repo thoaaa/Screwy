@@ -165,6 +165,7 @@ function webSocket() {
 					list_players[test_pseudo] = e;
 					if (list_players[test_pseudo].alive == "false") {
 						document.getElementById(e.pseudo).innerHTML = "<td><del>"+e.pseudo+" ("+e.role+")</del></td>";
+						//reception_message();
 					} else if (list_players[test_pseudo].role == "null") {
 						document.getElementById(e.pseudo).innerHTML = "<td>"+e.pseudo+"</td>";
 					} else {
