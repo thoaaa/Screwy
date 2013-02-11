@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Document sans nom</title>
+</head>
+<script type="text/javascript" src="fonctions.js">
+</script>
+<script type="text/javascript">
+	var a = '{"type":"startSalon","listRole":["innocent", "psychopathe", "psychopathe"]}';
+	var b = '{"type":"readyToStart","sender":"Damien"}';
+	var c = '{"type":"readyToStart","sender":"Thomas"}';
+	var d = '{"type":"addPlayer","pseudo":"Damien"}';
+	var e = '{"type":"addPlayer","pseudo":"Thomas"}';
+	var f = '{"type":"deletePlayer","pseudo":"Damien"}';
+	var g = '{"type":"deletePlayer","pseudo":"Thomas"}';
+	var h = '{"type":"addPlayer","pseudo":"Joffrey"}';
+	var i = '{"type":"readyToStart","sender":"Joffrey"}';
+	var j = '{"type":"deletePlayer","pseudo":"Joffrey"}';
+</script>
+<body>
+<input type="button" value="startSalon" onclick="parseur(a)"/>
+<input type="button" value="addDamien" onclick="parseur(d)"/>
+<input type="button" value="addThomas" onclick="parseur(e)"/>
+<input type="button" value="addJoffrey" onclick="parseur(h)"/>
+<input type="button" value="deleteDamien" onclick="parseur(f)"/>
+<input type="button" value="deleteThomas" onclick="parseur(g)"/>
+<input type="button" value="deleteJoffrey" onclick="parseur(j)"/>
+<input type="button" value="readyDamien" onclick="parseur(b)"/>
+<input type="button" value="readyThomas" onclick="parseur(c)"/>
+<input type="button" value="readyJoffrey" onclick="parseur(i)"/>
+<h1></h1>
+Visiteurs :<div id="visiteurs"></div>
+Joueurs :<div id="joueurs"></div>
+</body>
+</html>
