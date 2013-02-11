@@ -17,7 +17,7 @@ function insertKey($pseudo, $key) {
         $connexion = new PDO('mysql:host='. $host .';dbname= '. $ma_base, $user, $password);
         $connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $connexion->exec("SET CHARACTER SET utf8");
-         }
+    }
     catch(PDOException $e) {
         $msg = 'ERREUR PDO dans ' . $e->getFile() . ' L.' . $e->getLine() . ' : ' . $e->getMessage();
         die($msg);
@@ -28,7 +28,7 @@ function insertKey($pseudo, $key) {
         $connexion = null
     }
     catch (PDOException $e) {
-        echo 'ERREUR A L INSERTION';
+        die('Une erreur est survenue lors de l\'enregistrement de la clé.');
     }
 }
 ?>
