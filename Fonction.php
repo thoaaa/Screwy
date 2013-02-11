@@ -1,18 +1,34 @@
 <?php
-//Il est où, le fichier de connexion ??? MERDE ROCCO!!!!!!!!!
-include("connexion.php");
+// INCLURE ICI LE FICHIER CONNEXION.PHP
+// include("connexion.php");
 
 $key = generateKey();
-insertKey($key);
+echo $key;
+insertKey($pseudo, $key);
 
 function generateKey() {
-	//TODO creer une vraie clé !!!!! MERDE ROCCO!!!!!!!!!
-    $key = md5(uniqid(rand(0, 9999)));
+// LA VOILA TA CLEEEEEEEEEEEEEE
+    $key = md5(uniqid(microtime().rand(0, 9999)));
     return $key;
 }
 
 function insertKey($pseudo, $key) {
-	//TODO faire une vraie fonction qui vérifie qu'il n'y a pas d'erreur !!!!! ROCCO, on t'a répété à plusieurs reprises d'utiliser PDO !!!! MERDE !!!!!!!!
-    $key = mysql_query("INSERT INTO table VALUES(".$pseudo.", ".$cle.""); 
+    try {
+        $connexion = new PDO('mysql:host='. $host .';dbname= '. $ma_base, $user, $password);
+        $connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $connexion->exec("SET CHARACTER SET utf8");
+         }
+    catch(PDOException $e) {
+        $msg = 'ERREUR PDO dans ' . $e->getFile() . ' L.' . $e->getLine() . ' : ' . $e->getMessage();
+        die($msg);
+    }
+
+    try {    
+        $query = $connexion->exec("INSERT INTO table VALUES(".$pseudo.", ".$cle."");
+        $connexion = null
+    }
+    catch (PDOException $e) {
+        echo 'ERREUR A L INSERTION';
+    }
 }
 ?>
