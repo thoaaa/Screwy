@@ -5,6 +5,114 @@ var nbRole;
 var waitForReady = false;
 var gameStarted = false;
 
+var actionHistory = [];
+
+var voteManagers = [];
+var voteManagers["normal"] = new VoteManager("normal");
+var voteManagers["psycho"] = new VoteManager("psycho");
+var voteManagers["special"] = new VoteManager("special");
+
+function Vote(sender, target) {
+	this.sender = sender;
+	this.target = target;
+}
+
+function voteManager(type) {
+	//normal, psycho, ou special
+	this.type = type;
+	//liste des personnes autorisées a participer au vote
+	this.allowedVoters = [];
+	//personnes éligibles
+	this.targets = [];
+	this.votes = [];
+}
+
+voteManager.prototype = {
+	open : function(allowedVoters, targets){
+		this.votes = [];
+		this.targets = targets;
+		this.allowedVoters = allowedVoters;
+		
+		var openVote = {
+			receivers : this.allowedVoters,
+			instruction : {
+				type : "voteActivate",
+				typeVote : "psycho",
+				pseudoNominees : this.targets
+			}
+		};
+		postMessage(openVote);
+		console.log("Vote " + this.type + " ouvert");
+	},
+	getIdVoteBySender : function(sender) {
+		var i = 0;
+		var result = -1;
+		while ( i < this.votes.length && result == -1) {
+			if (this.votes[i].sender == sender)
+				result = i;
+			i++;
+		}
+		return result;
+	},	
+	registerVote: function(sender, target) {
+		if (allowedVoters.indexOf[sender] == -1 || targets.indexOf[target] == -1) {
+			console.log("vote non autorisé (type: " + this.type + ", sender : " + sender + ", target : " + target + ")");
+			return;
+		}
+		var id = this.getIdVoteBySender(sender);
+		if (id == -1) {
+			var v = new Vote(sender, target);
+			this.votes.push(v);
+			console.log(sender + " a voté " + target);
+		} else {
+			this.votes[id].target = target;
+			console.log(sender + " a changé de vote pour " + target);
+		}
+	},
+	countVotes: function() {
+		var max = 0;
+		var counter = [];
+		var result = [];
+		
+		//initialisation des compteurs
+		for (var i=0; i < this.targets.length; i++)
+			counter[i] = 0;
+		
+		//compta des votes
+		for (var i=0; i < this.votes.length; i++) {
+			var id = this.targets.indexOf(this.votes[i].target);
+			counter[id]++;
+			if (counter[id] > max)
+				max = counter[id];
+		}
+		
+		//determination des élus
+		for (var i=0; i < this.counter.length; i++) {
+			if(this.counter[i] == max)
+				result.push(this.targets[i]);
+		}
+		
+		return result;
+	},
+	close : function() {
+		var closeVote = {
+			receivers : allowedVoters,
+			instruction : {
+				type : "voteDeactivate",
+				typeVote : "normal",
+			}
+		};
+		postMessage(closeVote);
+		//on vide la liste des votant pour empecher la reception de nouveaux votes
+		this.allowedVoters = [];
+		result = this.countVotes();
+		this.targets = [];
+		this.votes = [];
+		console.log("Vote " + this.type + " terminé. Les élus sont " + result);
+		return result;
+	}
+}
+
 function parseur(objetJSON) {
 	var instruction = JSON.parse(objetJSON);
 	var type = instruction.type;
@@ -25,6 +133,22 @@ function parseur(objetJSON) {
 		case "deletePlayer" :
 			var pseudo = instruction.pseudo;
 			deletePlayer(pseudo);
+		break;
+		case "message" :
+			if (instruction.txt != undefined)
+				deliverMessage(instruction);
+			else
+				console.log("Reception d'un message non conforme.");
+		break;
+		case "vote" :
+			var sender = instruction.sender;
+			var target = instruction.pseudoVoted;
+			var typeVote = instruction.typeVote;
+			if (voteManagers[typeVote] != undefined && sender != undefined && target != undefined)
+				voteManagers[typeVote].registerVote(sender, target);
+			else
+				console.log("Reception d'un vote non conforme.");
+			
 		break;
 		default:
 			console.log("Instruction erronée : "+objetJSON); 
@@ -87,6 +211,41 @@ function deletePlayer(e) {
 			}
 	}
 	console.log("Le joueur "+e+" a été supprimé du salon !");
+}
+
+function deliverMsg(msg) {
+	msg.date = (new Date()).getTime();
+	actionHistory.push(msg);
+	
+	var receivers = [];
+	receivers.concat(liste_visiteurs);
+	
+	var i = 0;
+	var result = false;
+	while (i < liste_joueurs.length && !result) {
+		if (msg.sender == listeJoueurs[i])
+			result == true;
+		i++;
+	}
+	if (result)
+		receivers.concat(liste_joueurs);
+
+	var newMessage = {
+		receivers : receivers,
+		instruction : msg
+	};
+	postMessage(newMessage);
+}
+
+function sendHistory(pseudo) {
+	var history = {
+		receivers : [ pseudo ],
+		instruction : {
+			type : "instructionList",
+			instructions : actionHistory
+		}
+	};
+	postMessage(history);
 }
 
 function activateStarter() {
