@@ -1,5 +1,6 @@
 var list_players = new Array();
 var list_pseudos = new Array();
+var pseudo_perso = document.getElementById("pseudo_hidden").value;
 var time = 0;
 
 function webSocket() {
@@ -45,8 +46,6 @@ function webSocket() {
 			activate_starter();
 		} else if (object.type == "starterDeactivate") {
 			deactivate_starter();
-		} else if (object.type == "role") {
-			maj_profil(object);
 		} else if (object.type == "userInfo") {
 			maj_players(object);
 		} else if (object.type == "timerActivate") {
@@ -137,46 +136,45 @@ function webSocket() {
 		document.getElementById("pret").style.display = "none";
 	}
 	
-	//////////Mise à jour du profil client//////////
-	function maj_profil(e) {
-		var role = e.role;	
-		document.getElementById("label_role").innerHTML = role;
-	}
-	
 	//////////Mise à jour du profil des joueurs//////////
 	function maj_players(e) {
 		var pseudo = e.pseudo;
-		if (list_players.length == 0) {
-			list_players.push(e);
-			list_pseudos.push(e.pseudo);
-			var newPlayer = document.createElement("tr");
-			newPlayer.id = e.pseudo;
-			newPlayer.innerHTML = "<td>"+e.pseudo+"</td>";
-			document.getElementById("list_players").appendChild(newPlayer);		
-		} else {
-			for(i=0;i<list_players.length;i++) {
-				if (list_pseudos.indexOf(list_players[i].pseudo)<0) {
-					list_pseudos.push(list_players[i].pseudo);
-				}
-			}
-			var test_pseudo = list_pseudos.indexOf(pseudo);
-			if(test_pseudo<0) {
+		if (pseudo != pseudo_perso) {
+			if (list_players.length == 0) {
 				list_players.push(e);
 				list_pseudos.push(e.pseudo);
 				var newPlayer = document.createElement("tr");
 				newPlayer.id = e.pseudo;
 				newPlayer.innerHTML = "<td>"+e.pseudo+"</td>";
-				document.getElementById("list_players").appendChild(newPlayer);
+				document.getElementById("list_players").appendChild(newPlayer);		
 			} else {
-				list_players[test_pseudo] = e;
-				if (list_players[test_pseudo].alive == "false") {
-					document.getElementById(e.pseudo).innerHTML = "<td><del>"+e.pseudo+" ("+e.role+")</del></td>";
-				} else if (list_players[test_pseudo].role == "null") {
-					document.getElementById(e.pseudo).innerHTML = "<td>"+e.pseudo+"</td>";
+				for(i=0;i<list_players.length;i++) {
+					if (list_pseudos.indexOf(list_players[i].pseudo)<0) {
+						list_pseudos.push(list_players[i].pseudo);
+					}
+				}
+				var test_pseudo = list_pseudos.indexOf(pseudo);
+				if(test_pseudo<0) {
+					list_players.push(e);
+					list_pseudos.push(e.pseudo);
+					var newPlayer = document.createElement("tr");
+					newPlayer.id = e.pseudo;
+					newPlayer.innerHTML = "<td>"+e.pseudo+"</td>";
+					document.getElementById("list_players").appendChild(newPlayer);
 				} else {
-					document.getElementById(e.pseudo).innerHTML = "<td>"+e.pseudo+" ("+e.role+")</td>";
+					list_players[test_pseudo] = e;
+					if (list_players[test_pseudo].alive == "false") {
+						document.getElementById(e.pseudo).innerHTML = "<td><del>"+e.pseudo+" ("+e.role+")</del></td>";
+					} else if (list_players[test_pseudo].role == "null") {
+						document.getElementById(e.pseudo).innerHTML = "<td>"+e.pseudo+"</td>";
+					} else {
+						document.getElementById(e.pseudo).innerHTML = "<td>"+e.pseudo+" ("+e.role+")</td>";
+					}
 				}
 			}
+		} else {
+			//TODO affichage de la carte en fonction du rôle
+			document.getElementById("label_role").innerHTML = e.role;
 		}
 	}
 	
@@ -256,11 +254,10 @@ function webSocket() {
 		} else if (type == "pret") {
 			instruction.type = type;
 		} else if (type == "connexion") {
-			var pseudo = document.getElementById("pseudo_hidden").value;
 			var key = document.getElementById("key_hidden").value;
 			var id_salon = document.getElementById("id_salon_hidden").value;
 			instruction.type = type;
-			instruction.pseudo = pseudo;
+			instruction.pseudo = pseudo_perso;
 			instruction.key = key;
 			instruction.id_salon = id-salon;
 		}
