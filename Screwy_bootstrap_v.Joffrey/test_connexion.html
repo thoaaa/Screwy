@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Document pour tester la connexion à la BdD</title>
+<script type="text/javascript">
+//var sys = require('sys');
+var _mysql = require('mysql').Client;
+
+function recupererCle(pseudo, cle) {
+	/*console.log(process.env.VCAP_SERVICES);
+	var infos = JSON.parse(process.env.VCAP_SERVICES);
+	var tableau_donnees = infos.credentials;*/
+    var HOST = 'eu01-user01.cbxizyg0fwcn.eu-west-1.rds.amazonaws.com';
+    var USER = 'uhBhS4O2MyPxh';
+    var PASS = 'p2m3wzQGgDrK0';
+	var PORT = '3306';
+    var DB = 'dcf1462cbdf434f9ebf4c43f5ec4a51f8';
+    var CHAMP = 'cle_salon';
+    var TABLE = 'Joueur';
+	var isCorrect = false;
+	
+    console.log("Pseudo : "+pseudo);
+    console.log("Clé : "+cle);
+
+    var mysql = _mysql.createClient({
+        host: HOST,
+		port: PORT,
+        user: USER,
+        password: PASS
+    });
+
+    mysql.query('use '+ DATABASE);
+
+    console.log('Connexion effectuée');
+
+    mysql.query('SELECT * FROM '+ TABLE +' WHERE pseudo=' + pseudo + ' AND cle_salon=' + cle +'', function(error, result) {
+        if (error) {
+            console.log('Erreur ' + error.message);
+        } else if (result) {
+			isCorrect = true;
+			console.log("authentification réussie"); 
+		} else {
+			console.log("échec authentification");    
+        }
+    });
+
+    mysql.query('DELETE '+ CHAMP +' FROM '+ TABLE +' WHERE pseudo=' + pseudo + '', function(error, result) {
+        if (error) {
+            console.log('Erreur ' + error.message);
+        }
+      mysql.end();
+      console.log('Fin de connexion');
+    });
+	alert(isCorrect);
+}
+</script>
+</head>
+
+<body onLoad="recupererCle('test','test')">
+</body>
+</html>

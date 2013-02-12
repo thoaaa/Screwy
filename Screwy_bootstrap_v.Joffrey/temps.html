@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <link rel="icon" type="image/png" href="style/images/favicon.png">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script type="text/javascript">
+    
+    
+		//Méthode qui gère le tour spécifique des psychopathes
+		function roundOfPsychopaths(){
+			
+			var truc;
+			var timerOfPsychopaths= 5;
+			
+			//On décrémente ce timer toutes les 1s
+			timer = setInterval(function(){
+				
+				truc = compteARebours();
+				console.log(truc);
+				
+				if(timerOfPsychopaths == 0){
+					console.log("PNIOHGUOZEG");
+					clearInterval(timer);
+				}
+				
+			},1000);
+
+			//Méthode qui permet de faire un compte à rebours en prenant comme paramètre la valeur à décrémenter
+			function compteARebours(){
+				console.log(timerOfPsychopaths);
+				return timerOfPsychopaths--;
+			}
+			
+			
+		}
+		
+		
+		
+
+    </script>
+    
+</script>
+
+    <title>Temps</title>
+</head>
+
+<body>
+
+	<input type="button" onclick="roundOfPsychopaths();" value="Lancer" />
+
+</body>
+</html>
