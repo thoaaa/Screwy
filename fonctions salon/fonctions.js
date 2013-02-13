@@ -1,6 +1,7 @@
 var liste_roles = new Array();
 var liste_joueurs = new Array();
 var liste_visiteurs = new Array();
+var liste_psychos = new Array();
 var nbRole;
 var waitForReady = false;
 var gameStarted = false;
@@ -287,7 +288,6 @@ function shuffleArray(array) {
 
 function distribRoles(){
 	shuffleArray(liste_roles);
-	var liste_psychos = new Array();
 	var liste_instructions_psycho = new Array();
 	var objet;
 	for(var i = 0; i < liste_joueurs.length; i++){
@@ -320,57 +320,50 @@ function distribRoles(){
 	console.log(liste_instructions_psycho);
 }
 
-//Méthode qui permet d'activer le timer pour les personnes spécifiées dans le paramètre
-function activateTimer(receiversTimer) {
+function activateTimer(receiversTimer,nb_sec) {
 	var objet = {
 		receivers : receiversTimer,
 		instruction : {
-			type : "timerActivate"
+			type : "timerActivate",
+			time : nb_sec
 		}
 	}
 	postMessage(objet);
-	console.log("Envoi de l'instruction pour activer le timer pour les "+receiversTimer+" !");
+	console.log("Envoi de l'instruction pour activer le timer pour "+receiversTimer+" !");
 }
 
-//Méthode qui permet de désactiver le timer pour les personnes spécifiées dans le paramètre
-function desactivateTimer(receiversTimer) {
+function activateVote(receivers,type,liste) {
 	var objet = {
-		receivers : receiversTimer,
+		receivers : receivers,
 		instruction : {
-			type : "timerDesactivate"
+			type : "voteActivate",
+			typeVote : type,
+			pseudoNominees : liste
 		}
 	}
 	postMessage(objet);
-	console.log("Envoi de l'instruction pour désactiver le timer pour les "+receiversTimer+" !");
+	console.log("Envoi de l'instruction pour activer le vote pour "+receiversTimer+" !");
 }
 
-//Méthode qui permet d'activer le vote pour les personnes spécifiées dans le paramètre
-function activateVote(receiversTimer) {
+function desactivateVote(receivers,type) {
 	var objet = {
-		receivers : receiversTimer,
+		receivers : receivers,
 		instruction : {
-			type : "voteActivate"
+			type : "voteDesactivate",
+			typeVote : type
 		}
 	}
 	postMessage(objet);
-	console.log("Envoi de l'instruction pour activer le vote pour les "+receiversTimer+" !");
-}
-
-//Méthode qui permet de désactiver le vote pour les personnes spécifiées dans le paramètre
-function desactivateVote(receiversTimer) {
-	var objet = {
-		receivers : receiversTimer,
-		instruction : {
-			type : "voteDesactivate"
-		}
-	}
-	postMessage(objet);
-	console.log("Envoi de l'instruction pour désactiver le vote pour les "+receiversTimer+" !");
+	console.log("Envoi de l'instruction pour désactiver le vote pour "+receiversTimer+" !");
 }
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
+
+
+
+
 
 //Méthode qui gère le tour spécifique des psychopathes
 function roundOfPsychopaths(){
