@@ -155,8 +155,8 @@ function parseur(objetJSON) {
 		break;
 	}
 	
-	document.getElementById("visiteurs").innerHTML = liste_visiteurs;
-	document.getElementById("joueurs").innerHTML = liste_joueurs;
+	//document.getElementById("visiteurs").innerHTML = liste_visiteurs;
+	//document.getElementById("joueurs").innerHTML = liste_joueurs;
 }
 
 function startSalon(e) {
