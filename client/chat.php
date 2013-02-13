@@ -73,7 +73,6 @@
                     </form>
         		</div>
         		<div id="role_image">
-        			<img align="middle" src=""/>
         		</div>
         	</div>
         	<div id="center_chat" class="span7">

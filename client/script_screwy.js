@@ -174,8 +174,10 @@ function webSocket() {
 				}
 			}
 		} else {
-			//TODO affichage de la carte en fonction du rôle
-			document.getElementById("label_role").innerHTML = e.role;
+			var imageRole = document.createElement("img");
+			imageRole.src = "../../style/images/cartes"+e.role+".jpg";
+			imageRole.align = "middle";
+			document.getElementById("role_image").appendChild(imageRole);
 		}
 	}
 	
