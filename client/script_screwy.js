@@ -265,11 +265,4 @@ function webSocket() {
 		var msg = JSON.stringify(instruction);
 		connection.send(msg);
 	}
-
-	//////////Test de connexion//////////
-	setInterval(function() {
-	if (connection.readyState !== 1) {
-		console.log("Erreur de connexion !");
-	}
-	}, 3000);
 }

@@ -234,7 +234,7 @@ function deliverMsg(msg) {
 		receivers : receivers,
 		instruction : msg
 	};
-	//postMessage(newMessage);
+	postMessage(newMessage);
 }
 
 function sendHistory(pseudo) {
@@ -245,7 +245,7 @@ function sendHistory(pseudo) {
 			instructions : actionHistory
 		}
 	};
-	//postMessage(history);
+	postMessage(history);
 }
 
 function activateStarter() {
@@ -255,7 +255,7 @@ function activateStarter() {
 			type : "starterActivate"
 		}
 	}
-	//postMessage(objet);
+	postMessage(objet);
 	console.log("Envoi de l'instruction pour activer le starter !");
 }
 
@@ -266,7 +266,7 @@ function desactivateStarter() {
 			type : "starterDesactivate"
 		}
 	}
-	//postMessage(objet);
+	postMessage(objet);
 	console.log("Envoi de l'instruction pour désactiver le starter !");
 }
 
@@ -305,7 +305,7 @@ function distribRoles(){
 					alive : "true"
 				}
 			}
-			//postMessage(objet);
+			postMessage(objet);
 			console.log("Le joueur "+liste_joueurs[i]+" reçoit son rôle : "+liste_roles[i]);
 		}
 	}
@@ -316,11 +316,8 @@ function distribRoles(){
 			list_instructions : liste_instructions_psycho
 		}
 	}
-	//postMessage(envoi_psycho);
+	postMessage(envoi_psycho);
 	console.log(liste_instructions_psycho);
-	
-	//Et on commence notre tour de jeu !
-	roundOfPsychopaths();
 }
 
 //Méthode qui permet d'activer le timer pour les personnes spécifiées dans le paramètre
@@ -331,7 +328,7 @@ function activateTimer(receiversTimer) {
 			type : "timerActivate"
 		}
 	}
-	//postMessage(objet);
+	postMessage(objet);
 	console.log("Envoi de l'instruction pour activer le timer pour les "+receiversTimer+" !");
 }
 
@@ -343,7 +340,7 @@ function desactivateTimer(receiversTimer) {
 			type : "timerDesactivate"
 		}
 	}
-	//postMessage(objet);
+	postMessage(objet);
 	console.log("Envoi de l'instruction pour désactiver le timer pour les "+receiversTimer+" !");
 }
 
@@ -355,7 +352,7 @@ function activateVote(receiversTimer) {
 			type : "voteActivate"
 		}
 	}
-	//postMessage(objet);
+	postMessage(objet);
 	console.log("Envoi de l'instruction pour activer le vote pour les "+receiversTimer+" !");
 }
 
@@ -367,10 +364,13 @@ function desactivateVote(receiversTimer) {
 			type : "voteDesactivate"
 		}
 	}
-	//postMessage(objet);
+	postMessage(objet);
 	console.log("Envoi de l'instruction pour désactiver le vote pour les "+receiversTimer+" !");
 }
 
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 
 //Méthode qui gère le tour spécifique des psychopathes
 function roundOfPsychopaths(){
