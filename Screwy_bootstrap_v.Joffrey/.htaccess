@@ -1,5 +1,0 @@
-#Spécifie la durée de vie des données sur le serveur, en nombre de secondes. Après cette durée, les données seront considérées comme obsolètes, et peuvent potentiellement être supprimées.
-php_value  session.gc_maxlifetime  3600
-
-#Spécifie la durée de vie du cookie en secondes. La valeur de 0 signifie : "Jusqu'à ce que le navigateur soit éteint".
-php_value  session.cookie_lifetime  3600

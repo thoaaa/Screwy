@@ -1,0 +1,323 @@
+//////////////////Transmissions client -> serveur//////////////////
+
+- connexion
+
+	var connec = {
+		type: 'connexion'
+		pseudo: xxx,
+		pswd: xxx,
+	};
+
+- message
+
+	var msg = {
+		type: 'message'
+		txt: xxx,
+	};
+
+- envoyer signal "prêt"
+
+	var ready = {
+		type = 'readyToPlay'
+	};
+
+- vote
+
+	var vote = {
+		type = 'vote',
+		pseudoVoted = xxx
+	};
+
+
+- quitter
+	//inutile maintenant, les déconnexion sont gerées automatiquement
+
+
+//////////////////Transmissions serveur -> client//////////////////
+
+---MAJ---
+- transmettre plusieurs instructions //permet de communiquer plusieurs instructions dans un seul push
+
+	var instructions = {
+		type = "instructionList",
+		instructions = [ xxx, xxx... ]
+	};
+
+-message
+
+	var msg = {
+		type: 'message'
+		sender: xxx,
+		date: xxx, //objet de type Date ?
+		txt: xxx,
+		color: xxx,
+	};
+
+
+- activer/désactiver votes
+
+
+	var va = {
+		type: 'voteActivate',
+		typeVote : xxx, //champs pour désigner si vote normal "normal", psychopathe "psycho" ou capacité spéciale "special"
+		pseudoNominees: [ xxx, xxx, xxx ], //liste des condidats nominés
+	};
+
+	var vd = {
+		type: 'voteDesactivate'
+		typeVote : xxx //vote a desactiver
+	};
+
+- activer/désactiver "starter"
+
+	var starterActivate = {
+		type = 'starterActivate'
+	};
+
+	var starterdesactivate = {
+		type = 'starterdesactivate'
+	};
+
+
+- MAJ profil perso
+
+	var role = {
+		type = 'role', //pour le rôle, cf fin du document
+		role = xxx
+	};
+
+- MAJ liste joueurs
+
+	var UserInfo {
+		type = 'userInfo'
+		pseudo = xxx,
+		role = xxx, //role du joueur (null si inconnu)
+		alive = xxx //booléen
+	};
+
+- activer timer
+
+	var timerActivate = {
+		type = 'timerActivate',
+		time = xxx //temps en secondes
+	};
+
+- message d'erreur
+
+	var errorMsg = {
+		type = 'errorMessage',
+		txt = xxx
+	};
+
+suggestions pour les noms des roles dans le code :
+
+victime : victim ? casualty ?
+psychopathe : psychopath
+boitié buggé : doubleVote ?
+meneur de troupes : leader
+miraculé : miraculous ?
+zombie : zombie
+ninja : ninja
+mentaliste : mentalist
+télékinesiste : deviant ??
+hérétique : heretic
+Théo Hazard : random
+tentateur : tempter
+sage : wise ?
+
+
+
+//////////////////TRANSMISSIONS THREAD PRINCIPAL > WEBWORKER//////////////////
+
+- message
+
+  var msg = {
+		type: 'message',
+		sender : xxx,
+		txt: xxx
+	};
+
+- envoyer signal "prêt"
+
+	var ready = {
+		type = 'readyToPlay',
+		sender = xxx
+	};
+
+- vote
+
+	var vote = {
+		type = 'vote',
+		sender = xxx,
+		pseudoVoted = xxx
+	};	
+
+- transmettre plusieurs instructions //permet de communiquer plusieurs instructions dans un seul push
+
+	var instructions = {
+		type = "instructionList",
+		instructions = [ xxx, xxx... ],
+		sender = xxx
+	};
+	
+//////////////////TRANSMISSIONS WEBWORKER > THREAD PRINCIPAL//////////////////
+
+- message
+
+	var msg = {
+		type: 'message',
+		sender : xxx,
+		date: xxx,
+		txt: xxx,
+		receivers : [xxx,xxx,xxx] //liste des destinataires
+	};
+
+- activer/désactiver votes
+
+	var va = {
+		type: 'voteActivate',
+		typeVote : xxx, //champs pour désigner si vote normal "normal", psychopathe "psycho" ou capacité spéciale "special"
+		pseudoNominees: [ xxx, xxx, xxx ], //liste des condidats nominés
+		receivers : [xxx,xxx,xxx] //liste des destinataires
+	};
+
+	var vd = {
+		type: 'voteDesactivate'
+		typeVote : xxx //vote a desactiver
+		receivers : [xxx,xxx,xxx] //liste des destinataires
+	};
+
+- activer/désactiver "starter"
+
+	var starterActivate = {
+		type = 'starterActivate'
+	};
+
+	var starterdesactivate = {
+		type = 'starterdesactivate'
+	};
+
+
+- MAJ profil perso
+
+	var role = {
+		type = 'role', //pour le rôle, cf fin du document
+		role = xxx
+		receivers : [xxx,xxx,xxx] //liste des destinataires
+	};
+
+- MAJ liste joueurs
+
+	var UserInfo {
+		type = 'userInfo'
+		pseudo = xxx,
+		role = xxx, //role du joueur (null si inconnu)
+		alive = xxx //booléen
+		receivers : [xxx,xxx,xxx] //liste des destinataires
+	};
+
+- activer timer
+
+	var timerActivate = {
+		type = 'timerActivate',
+		time = xxx //temps en secondes
+	};
+
+- transmettre plusieurs instructions //permet de communiquer plusieurs instructions dans un seul push
+
+	var instructions = {
+		type = "instructionList",
+		instructions = [ xxx, xxx... ]
+	};
+	
+	
+//////////////////TRANSMISSIONS CLIENT > SERVEUR//////////////////
+
+- message
+
+	var msg = {
+		type: 'message',
+		txt: xxx
+	};
+
+
+- envoyer signal "prêt"
+
+	var ready = {
+		type = 'readyToPlay'
+	};
+
+- vote
+
+	var vote = {
+		type = 'vote',
+		pseudoVoted = xxx
+	};
+
+	
+//////////////////TRANSMISSION SERVEUR > CLIENT//////////////////
+
+- message
+	
+	var msg = {
+		type: 'message'
+		sender: xxx,
+		date: xxx,
+		txt: xxx,
+	};
+
+
+- activer/désactiver votes
+
+
+	var va = {
+		type: 'voteActivate',
+		typeVote : xxx, //champs pour désigner si vote normal "normal", psychopathe "psycho" ou capacité spéciale "special"
+		pseudoNominees: [ xxx, xxx, xxx ], //liste des condidats nominés
+	};
+
+	var vd = {
+		type: 'voteDesactivate'
+		typeVote : xxx //vote a desactiver
+	};
+
+- activer/désactiver "starter"
+
+	var starterActivate = {
+		type = 'starterActivate'
+	};
+
+	var starterdesactivate = {
+		type = 'starterdesactivate'
+	};
+
+
+- MAJ profil perso
+
+	var role = {
+		type = 'role', //pour le rôle, cf fin du document
+		role = xxx
+	};
+
+- MAJ liste joueurs
+
+	var UserInfo {
+		type = 'userInfo'
+		pseudo = xxx,
+		role = xxx, //role du joueur (null si inconnu)
+		alive = xxx //booléen
+	};
+
+- activer timer
+
+	var timerActivate = {
+		type = 'timerActivate',
+		time = xxx //temps en secondes
+	};
+
+- message d'erreur
+
+	var errorMsg = {
+		type = 'errorMessage',
+		txt = xxx
+	};
