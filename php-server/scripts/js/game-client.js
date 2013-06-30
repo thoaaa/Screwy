@@ -13,7 +13,7 @@ function webSocket() {
 		return;
 	}
 
-	var connection = new WebSocket('ws://127.0.0.1:1337');
+	var connection = new WebSocket('ws://'+ NodeServerParam.hostname + ":" + NodeServerParam.port );
 
 	connection.onopen = function () {
 		sendInstruction('connexion');

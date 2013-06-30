@@ -43,7 +43,8 @@
     
     <script type="text/javascript" src="lib/jquery/jquery.js"></script>
     <script type="text/javascript" src="scripts/js/myAjax.js"></script>
-    <script type="text/javascript" src="scripts/js/script_screwy.js"></script>
+    <script type="text/javascript" src="scripts/js/nodeServer-param"></script>
+    <script type="text/javascript" src="scripts/js/game-client.js"></script>
   
 
     <title>Salon <?php ?></title>
