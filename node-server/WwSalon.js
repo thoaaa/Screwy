@@ -1,4 +1,4 @@
-var fonctionWW = function() {
+var WwSalon = function() {
 	var liste_roles = new Array();
 	var liste_joueurs = new Array();
 	var liste_visiteurs = new Array();
@@ -389,3 +389,5 @@ var fonctionWW = function() {
 		console.log(liste_instructions_psycho);
 	}
 }
+
+module.exports = WwSalon;

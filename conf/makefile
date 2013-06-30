@@ -1,16 +1,16 @@
 
 AC=./apply_conf.sh
-EXEC=../php-server/scripts/php/connect.php ../node-server/db-param.js ../node-server/nodeServer-param.js ../php-server/scripts/js/nodeServer-param.js
+EXEC=../php-server/scripts/php/connect.php ../node-server/conf/DbParam.js ../node-server/conf/NodeServerParam.js ../php-server/scripts/js/nodeServer-param.js
 
 all: $(EXEC)
 
 ../php-server/scripts/php/connect.php: database.conf ../php-server/scripts/php/connect.sample.php
 	@$(AC) $^ $@
 
-../node-server/db-param.js:  database.conf ../node-server/db-param.sample.js
+../node-server/conf/DbParam.js:  database.conf ../node-server/conf/DbParam.sample.js
 	@$(AC) $^ $@
 	
-../node-server/nodeServer-param.js: nodeServer.conf ../node-server/nodeServer-param.sample.js
+../node-server/conf/NodeServerParam.js: nodeServer.conf ../node-server/conf/NodeServerParam.sample.js
 	@$(AC) $^ $@
 	
 ../php-server/scripts/js/nodeServer-param.js: nodeServer.conf ../php-server/scripts/js/nodeServer-param.sample.js
